@@ -6,7 +6,7 @@
         <p class="page-desc">维护实测图纸，围绕图纸编号、绘图对象、绘图类型、比例尺做登记、筛选与状态流转。</p>
       </div>
       <div class="page-actions">
-        <button class="btn primary" type="button" @click="openCreate">登记实测图纸</button>
+        <RouterLink class="btn primary" to="/drawing/board">打开交档看板</RouterLink>
         <button class="btn" type="button" @click="exportRows">导出实测绘图清单</button>
       </div>
     </header>
@@ -82,8 +82,8 @@ import {
 import type { EntryRow } from '@/data/types'
 
 const meta = moduleMeta('drawing')
-const columns = ["图纸编号", "绘图对象", "绘图类型", "比例尺", "绘图人", "校核人", "完成日期", "图纸状态"]
-const actions = ["提交校核", "确认校核", "退回修改"]
+const columns = ["图纸编号", "绘图对象", "绘图类型", "比例尺", "版本", "绘图人", "校核人", "校核意见", "完成日期", "图纸状态"]
+const actions = ["提交校核", "退回修改", "确认校核", "完成数字化"]
 const statuses = ["绘制中", "待校核", "已校核", "已数字化", "需修改"]
 const stats = [{"label": "图纸总数", "value": 0}, {"label": "已校核数", "value": 0}, {"label": "待校核数", "value": 0}]
 
@@ -106,10 +106,6 @@ function resetFilters() {
 
 function exportRows() {
   downloadEntries(meta.key)
-}
-
-function openCreate() {
-  errorMessage.value = '实测图纸登记入口尚未接入审批流'
 }
 
 function runAction(action: string, row: EntryRow) {

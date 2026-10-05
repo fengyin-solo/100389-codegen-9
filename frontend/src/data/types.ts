@@ -17,6 +17,8 @@ export type ModuleMeta = {
   statuses: string[]
   actions: string[]
   actionTargets: Record<string, string>
+  /** 严格流转表：登记后只允许从指定源状态发起该动作，未登记的源状态一律拦下。 */
+  transitions?: Record<string, string[]>
   metrics: string[]
 }
 

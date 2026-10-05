@@ -2,7 +2,7 @@ import { SEED_ROWS } from './seed'
 import type { EntryRow } from './types'
 
 // 本地持久化：数据放在 localStorage 里，刷新、关掉再打开都还在。
-const STORAGE_KEY = 'field-archaeology-digital:entries'
+const STORAGE_KEY = 'field-archaeology-digital:entries:v2'
 
 function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T
@@ -52,6 +52,14 @@ export function resetRows(key: string): EntryRow[] {
   const rows = clone(SEED_ROWS[key] ?? [])
   saveRows(key, rows)
   return rows
+}
+
+/** 整体恢复示例数据并清掉内存缓存：交档看板跨模块重置时调用。 */
+export function resetAllRows(): void {
+  cache = clone(SEED_ROWS)
+  if (typeof window !== 'undefined' && window.localStorage) {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cache))
+  }
 }
 
 export function storageKey(): string {

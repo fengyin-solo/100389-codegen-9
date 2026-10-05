@@ -43,6 +43,23 @@ export function runAction(key: string, id: number, action: string): ActionResult
   if (current === target) {
     return { ok: false, message: `${meta.entity}已经是「${target}」，不用重复操作` }
   }
+  // 严格流转表：命中后按「源状态 -> 目标状态」白名单校验，回退与越级直达一律拦下。
+  if (meta.transitions) {
+    const allowed = meta.transitions[action] ?? []
+    if (!allowed.includes(current)) {
+      const currentIndex = meta.statuses.indexOf(current)
+      const targetIndex = meta.statuses.indexOf(target)
+      let reason = `不能从「${current}」直接执行「${action}」`
+      if (targetIndex >= 0 && currentIndex >= 0 && targetIndex < currentIndex) {
+        reason = `回退操作已拦下：「${current}」不能退回到「${target}」，如需返工请走校核退回流程`
+      } else if (target === '已数字化' && current !== '已校核') {
+        reason = `不能从「${current}」直接跳到「已数字化」：须先提交校核并在确认校核通过后才能数字化`
+      } else {
+        reason = `状态流转不合法：「${current}」不允许执行「${action}」，请按 ${allowed.join('、') || '规定'} 阶段逐步推进`
+      }
+      return { ok: false, message: reason }
+    }
+  }
   const lastStatus = meta.statuses[meta.statuses.length - 1]
   const updated: EntryRow = {
     ...rows[index],

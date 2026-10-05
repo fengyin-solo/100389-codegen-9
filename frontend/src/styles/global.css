@@ -12,7 +12,8 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .app-title { font-size: 16px; margin: 0 0 16px; }
 .nav-list { display: flex; flex-direction: column; gap: 4px; }
 .nav-item { color: #cbd5e1; text-decoration: none; padding: 6px 8px; border-radius: 6px; font-size: 13px; }
-.nav-item.router-link-active { background: #1f6feb; color: #fff; }
+.nav-item.router-link-active,
+.nav-item.nav-item-active { background: #1f6feb; color: #fff; }
 .app-main { flex: 1; padding: 16px 20px; }
 .app-head { display: flex; justify-content: space-between; color: var(--muted); font-size: 13px; }
 .page-head { display: flex; justify-content: space-between; align-items: flex-start; margin: 12px 0; }

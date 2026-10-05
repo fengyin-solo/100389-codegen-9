@@ -9,6 +9,7 @@ const Flotation = () => import('@/views/flotation/index.vue')
 const Dating = () => import('@/views/dating/index.vue')
 const Photography = () => import('@/views/photography/index.vue')
 const Drawing = () => import('@/views/drawing/index.vue')
+const DrawingBoard = () => import('@/views/drawing/Board.vue')
 const Diary = () => import('@/views/diary/index.vue')
 const Survey = () => import('@/views/survey/index.vue')
 const HumanBone = () => import('@/views/human_bone/index.vue')
@@ -32,6 +33,7 @@ const router = createRouter({
     { path: '/dating', name: 'dating', component: Dating },
     { path: '/photography', name: 'photography', component: Photography },
     { path: '/drawing', name: 'drawing', component: Drawing },
+    { path: '/drawing/board', name: 'drawing-board', component: DrawingBoard },
     { path: '/diary', name: 'diary', component: Diary },
     { path: '/survey', name: 'survey', component: Survey },
     { path: '/human_bone', name: 'human_bone', component: HumanBone },
