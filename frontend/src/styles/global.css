@@ -35,3 +35,56 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .error-text { color: #b42318; }
 .status-legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 10px; font-size: 12px; color: var(--muted); }
 .legend-item { background: #eef2f7; border-radius: 999px; padding: 2px 10px; }
+
+/* 交档看板 */
+.muted { color: var(--muted); font-weight: normal; }
+.ok-text { color: #067647; }
+.btn.danger { border-color: #f0b4ae; color: #b42318; }
+.rule-banner { background: #f2f7ff; border: 1px solid #c7dbff; border-left: 4px solid var(--brand); border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; line-height: 1.7; }
+.rule-banner strong { color: #17418a; }
+.rule-banner ul { margin: 6px 0 0; padding-left: 18px; }
+.board-title { font-size: 15px; margin: 18px 0 8px; }
+.board-table th, .board-table td { vertical-align: top; }
+.board-table tr.is-open > td { background: #fafcff; }
+.stage-badge { display: inline-block; border-radius: 999px; padding: 2px 10px; font-size: 12px; white-space: nowrap; }
+.st-drawing { background: #eef2f7; color: #475569; }
+.st-review { background: #fef3c7; color: #92400e; }
+.st-passed { background: #dcfce7; color: #166534; }
+.st-done { background: #dbeafe; color: #1e40af; }
+.st-reject { background: #fee4e2; color: #b42318; }
+.chip { display: inline-block; border-radius: 4px; padding: 1px 8px; margin: 1px 4px 1px 0; font-size: 12px; background: #eef2f7; }
+.chip.warn { background: #fef3c7; color: #92400e; }
+.chip.danger { background: #fee4e2; color: #b42318; }
+.op-cell { white-space: nowrap; }
+.op-cell .link { margin-right: 8px; }
+.detail-row > td { background: #fafcff !important; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.detail-grid h4 { margin: 4px 0 6px; font-size: 13px; }
+.timeline, .review-list { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.7; }
+.review-list { list-style: none; padding-left: 0; }
+.review-list li { border-bottom: 1px dashed var(--border); padding: 4px 0; }
+.review-state { display: inline-block; border-radius: 4px; padding: 0 6px; font-size: 12px; margin-right: 4px; background: #e2e8f0; color: #334155; }
+.review-state.rs-passed { background: #dcfce7; color: #166534; }
+.review-state.rs-rejected { background: #fee4e2; color: #b42318; }
+.review-state.rs-superseded { background: #e5e7eb; color: #6b7280; }
+.review-state.rs-active { background: #fef3c7; color: #92400e; }
+.action-form { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 10px; }
+.action-form label { font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+.action-form label.grow { flex: 1; min-width: 260px; }
+.action-form input { min-width: 200px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; }
+.form-actions { display: flex; gap: 8px; }
+.pending-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.pending-panel { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.pending-panel header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.pending-panel h4 { margin: 0; font-size: 14px; }
+.pending-panel .count { background: #fef3c7; color: #92400e; border-radius: 999px; padding: 0 10px; font-size: 12px; }
+.pending-list { list-style: none; margin: 0; padding: 0; font-size: 13px; line-height: 1.8; }
+.pending-list li { border-bottom: 1px dashed var(--border); padding: 4px 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pending-list .from { width: 100%; font-size: 12px; color: var(--muted); }
+.list-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.check-list { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+.list-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.list-head h4 { margin: 0; font-size: 14px; }
+.check-list .data-table th, .check-list .data-table td { padding: 6px 8px; font-size: 12px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+@media (max-width: 1200px) { .pending-grid, .list-grid, .detail-grid { grid-template-columns: 1fr; } }

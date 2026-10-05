@@ -18,6 +18,10 @@ export type ModuleMeta = {
   actions: string[]
   actionTargets: Record<string, string>
   metrics: string[]
+  // 终态可配多个：不填时沿用「状态列表最后一项即终态」的旧约定。
+  terminalStatuses?: string[]
+  // 状态机约束：动作只允许在列出的源状态下发起；未登记的动作不做拦截（保持旧模块行为）。
+  statusTransitions?: Record<string, string[]>
 }
 
 export type PageResult = {

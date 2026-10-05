@@ -13,6 +13,21 @@ export function moduleMeta(key: string): ModuleMeta {
   return meta
 }
 
+export function terminalStatuses(meta: ModuleMeta): string[] {
+  return meta.terminalStatuses && meta.terminalStatuses.length
+    ? meta.terminalStatuses
+    : [meta.statuses[meta.statuses.length - 1]]
+}
+
+// 状态机守卫：未登记约束的动作保持旧行为；登记了就只允许在合法源状态下发起（拦住跳级与回退）。
+export function canTransition(meta: ModuleMeta, action: string, currentStatus: string): boolean {
+  const allowed = meta.statusTransitions?.[action]
+  if (!allowed) {
+    return true
+  }
+  return allowed.includes(currentStatus)
+}
+
 export function filterRows(rows: EntryRow[], filters: Record<string, string>): EntryRow[] {
   const pairs = Object.entries(filters).filter(([, value]) => value.trim() !== '')
   if (pairs.length === 0) {
@@ -28,7 +43,13 @@ export function listEntries(key: string, filters: Record<string, string> = {}): 
   return { items: matched, total: matched.length, page: 1, size: matched.length }
 }
 
-export function runAction(key: string, id: number, action: string): ActionResult {
+// 底层流转入口：统一做状态机校验与落库，交档看板等跨模块动作也走这里，保证拦截口径一致。
+export function transitionEntry(
+  key: string,
+  id: number,
+  action: string,
+  options: { patch?: Record<string, string | number | boolean> } = {},
+): ActionResult & { target?: string } {
   const meta = moduleMeta(key)
   const target = meta.actionTargets[action]
   if (!target) {
@@ -43,17 +64,28 @@ export function runAction(key: string, id: number, action: string): ActionResult
   if (current === target) {
     return { ok: false, message: `${meta.entity}已经是「${target}」，不用重复操作` }
   }
-  const lastStatus = meta.statuses[meta.statuses.length - 1]
+  if (!canTransition(meta, action, current)) {
+    return {
+      ok: false,
+      message: `状态流转被拦截：${meta.entity}当前为「${current}」，不能直接执行「${action}」跳到「${target}」，请按校核阶段逐级推进`,
+    }
+  }
+  const done = terminalStatuses(meta)
   const updated: EntryRow = {
     ...rows[index],
+    ...options.patch,
     status: target,
-    pending: target !== lastStatus,
+    pending: !done.includes(target),
     abnormal: NEGATIVE_ACTIONS.some((verb) => action.startsWith(verb)),
   }
   const next = [...rows]
   next[index] = updated
   saveRows(key, next)
-  return { ok: true, message: `${meta.entity}已${action}，当前状态「${target}」` }
+  return { ok: true, message: `${meta.entity}已${action}，当前状态「${target}」`, target }
+}
+
+export function runAction(key: string, id: number, action: string): ActionResult {
+  return transitionEntry(key, id, action)
 }
 
 export function resetModule(key: string): PageResult {
@@ -68,11 +100,15 @@ export function exportEntries(key: string): { filename: string; content: string 
   for (const row of listRows(key)) {
     lines.push([row.id, ...meta.fields.map((field) => row[field] ?? ''), row.status].join(','))
   }
-  return { filename: `${meta.name}-清单.csv`, content: `\uFEFF${lines.join('\n')}` }
+  return { filename: `${meta.name}-清单.csv`, content: `﻿${lines.join('\n')}` }
 }
 
 export function downloadEntries(key: string): void {
   const { filename, content } = exportEntries(key)
+  downloadCsv(filename, content)
+}
+
+export function downloadCsv(filename: string, content: string): void {
   const blob = new Blob([content], { type: 'text/csv;charset=utf-8' })
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement('a')
@@ -88,10 +124,11 @@ export function loadOverview(): OverviewResult {
   const rows = allRows()
   const modules = [...MODULE_BY_KEY.values()].map((meta) => {
     const entries = rows[meta.key] ?? []
+    const done = terminalStatuses(meta)
     return {
       name: meta.name,
       created: entries.length,
-      pending: entries.filter((row) => row.pending).length,
+      pending: entries.filter((row) => row.pending && !done.includes(String(row.status))).length,
       abnormal: entries.filter((row) => row.abnormal).length,
     }
   })

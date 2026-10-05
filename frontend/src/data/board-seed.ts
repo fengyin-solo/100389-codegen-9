@@ -1,0 +1,117 @@
+import type { DrawingBoardStore } from './drawing-board-types'
+
+// 交档看板示例：图纸版本、校核意见、校核通过后生成的跨模块补拍/归档清单。
+// 图纸 id 与 seed.ts 中 drawing 的条目一一对应：
+// 1=DRAW-0017 已校核 · 2=DRAW-0018 已校核 · 3=DRAW-0019 待校核
+// 4=DRAW-0020 需修改 · 5=DRAW-0021 已数字化（历史图纸）· 6=DRAW-0022 绘制中
+export const SEED_DRAWING_BOARD: DrawingBoardStore = {
+  versions: [
+    { drawingId: 1, version: 1, scale: '1:20', changeNote: '初版：灰坑 H3 平剖面图', submittedAt: '2026-09-20' },
+    { drawingId: 2, version: 1, scale: '1:20', changeNote: '初版：墓葬 M1 平剖面图', submittedAt: '2026-09-22' },
+    { drawingId: 3, version: 1, scale: '1:50', changeNote: '初版：T0102 探方四壁剖面图', submittedAt: '2026-09-25' },
+    { drawingId: 4, version: 1, scale: '1:20', changeNote: '初版：灰坑 H5 平面图', submittedAt: '2026-09-26' },
+    {
+      drawingId: 4,
+      version: 2,
+      scale: '1:50',
+      changeNote: '按校核意见改绘：调整比例尺，补绘灰坑范围线与探方壁关系',
+      submittedAt: '2026-10-03',
+    },
+    { drawingId: 5, version: 1, scale: '1:2000', changeNote: '历史普查图纸：房址 F1 总平面图', submittedAt: '2026-07-02' },
+  ],
+  reviews: [
+    {
+      id: 1,
+      drawingId: 1,
+      version: 1,
+      state: 'passed',
+      comment: '图面要素齐全，比例尺标注规范，同意校核通过。',
+      reviewer: '梁思正',
+      createdAt: '2026-09-23',
+    },
+    {
+      id: 2,
+      drawingId: 2,
+      version: 1,
+      state: 'passed',
+      comment: '墓葬轮廓、随葬品位置与记录表一致，同意通过。',
+      reviewer: '梁思正',
+      createdAt: '2026-09-25',
+    },
+    {
+      id: 3,
+      drawingId: 3,
+      version: 1,
+      state: 'active',
+      comment: '北壁层位分界线待现场复核，复核后确认。',
+      reviewer: '梁思正',
+      createdAt: '2026-09-26',
+    },
+    {
+      id: 4,
+      drawingId: 4,
+      version: 1,
+      // 重新提交 v2 后，v1 上的退回意见被新版本覆盖，不再阻断 v2 校核。
+      state: 'superseded',
+      comment: '比例尺选择不当，灰坑范围线与探方壁关系不清，退回按 1:50 重绘。',
+      reviewer: '梁思正',
+      createdAt: '2026-09-27',
+    },
+    {
+      id: 5,
+      drawingId: 5,
+      version: 1,
+      state: 'passed',
+      comment: '历史图纸按原比例尺 1:2000 兼容归档，不做比例尺换算。',
+      reviewer: '梁思正',
+      createdAt: '2026-07-05',
+    },
+  ],
+  reshootItems: [
+    {
+      id: 1,
+      kind: '需重拍影像',
+      drawingId: 1,
+      drawingNo: 'DRAW-0017',
+      subject: 'FEAT-0003 灰坑 H3（探方 T0103）',
+      photoId: 5,
+      photoNo: 'PHOT-0005',
+      reason: '现有影像模糊、方位标识缺失，需按校核通过图纸范围重拍。',
+      requiredScale: '1:20',
+      status: '待补拍',
+      createdAt: '2026-09-23',
+      resolvedAt: '',
+    },
+    {
+      id: 2,
+      kind: '影像缺口',
+      drawingId: 1,
+      drawingNo: 'DRAW-0017',
+      subject: '探方 T0103 全景',
+      photoId: null,
+      photoNo: null,
+      reason: '校核交档要求的探方全景照缺失，需补拍。',
+      requiredScale: '全景照（不套图纸比例尺）',
+      status: '待补拍',
+      createdAt: '2026-09-23',
+      resolvedAt: '',
+    },
+  ],
+  archiveItems: [
+    {
+      id: 1,
+      drawingId: 1,
+      drawingNo: 'DRAW-0017',
+      featureId: 3,
+      featureNo: 'FEAT-0003',
+      trenchNo: 'T0103',
+      featureType: '灰坑 H3',
+      version: 1,
+      scale: '1:20',
+      status: '待归档',
+      createdAt: '2026-09-23',
+      resolvedAt: '',
+    },
+  ],
+  seq: { review: 5, reshoot: 2, archive: 1 },
+}

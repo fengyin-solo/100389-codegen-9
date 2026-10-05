@@ -83,7 +83,7 @@ import type { EntryRow } from '@/data/types'
 
 const meta = moduleMeta('feature')
 const columns = ["遗迹编号", "所属探方", "遗迹类型", "开口层位", "打破关系", "平面形状", "填土特征", "记录状态"]
-const actions = ["开始清理", "完成测绘", "执行解剖"]
+const actions = ["开始清理", "完成测绘", "执行解剖", "归档遗迹"]
 const statuses = ["已揭露", "清理中", "已完绘", "已解剖", "已归档"]
 const stats = [{"label": "遗迹总数", "value": 0}, {"label": "清理中遗迹", "value": 0}, {"label": "已完绘遗迹", "value": 0}]
 
